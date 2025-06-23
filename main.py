@@ -54,29 +54,20 @@ for i in range(len(imgs)):
             f.write(hist128_csv)
     elif mode == 1:
         # 画像をPタイル法で二値化
-        gray = cv2.cvtColor(imgs[i], cv2.COLOR_BGR2GRAY)
+        #gray = cv2.cvtColor(imgs[i], cv2.COLOR_BGR2GRAY)
         print("画像の閾値を指定してください(0-1)")
-        p_tile = float(input(">"))  # 50%を白にする
-        total_pixels = gray.size
+        p_tile = float(input(">")) 
+        total_pixels = v[i].size
         target_white = int(total_pixels * p_tile)
-
         # ヒストグラムを計算
-        hist = cv2.calcHist([gray], [0], None, [256], [0,256]).flatten()
+        hist = cv2.calcHist([v[i]], [0], None, [256], [0,256]).flatten()
         # 上位から何画素目まででtarget_whiteを超えるか
         cumulative = np.cumsum(hist[::-1])  # 画素値255から累積
         threshold = 255 - np.searchsorted(cumulative, target_white)
 
         # 二値化
-        _, binary = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
+        _, binary = cv2.threshold(v[i], threshold, 255, cv2.THRESH_BINARY)
         cv2.imwrite(f"binary_{i}.png", binary)  
         print(f"二値化画像を保存しました: binary_{i}.png")
     else:
         break
-    
-
-
-
-
-
-
-
